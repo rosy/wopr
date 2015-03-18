@@ -1,0 +1,534 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.floydware</groupId>
+	<artifactId>WOPR</artifactId>
+	<packaging>war</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>WOPR</name>
+	<url></url>
+
+	<properties>
+		<encoding>UTF-8</encoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<environment>development</environment>
+		<skipTests>false</skipTests>
+
+		<java.version>1.6</java.version>
+
+		<!-- DEPENDENCY VERSIONS -->
+		<!-- Change these and it should propagate through to all projects:
+			Note: can add to specific project's <properties> section to override
+		 -->
+
+		<!-- base -->
+		<aspectjweaver.version>1.6.1</aspectjweaver.version>
+		<cglib.version>2.2.2</cglib.version>
+		<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
+		<ibatis-sqlmap.version>2.3.4.726</ibatis-sqlmap.version>
+		<jackson.version>1.9.3</jackson.version>
+		<javax-inject.version>1</javax-inject.version>
+		<javax-mail.version>1.4</javax-mail.version>
+		<javax-validation.version>1.0.0.GA</javax-validation.version>
+		<json.version>20140107</json.version>
+		<jta.version>1.1</jta.version>
+		<ostermiller.version>1.07.00</ostermiller.version>
+		<poi.version>3.10-FINAL</poi.version>
+		<poi-ooxml.version>3.10-FINAL</poi-ooxml.version>
+		<quartz.version>1.7.3</quartz.version>
+		<velocity.version>1.5</velocity.version>
+
+		<!-- commons + spring -->
+		<commons-beanutils.version>1.7.0</commons-beanutils.version>
+		<commons-chain.version>1.2</commons-chain.version>
+		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-discovery.version>0.5</commons-discovery.version>
+		<commons-fileupload.version>1.2.2</commons-fileupload.version>
+		<commons-io.version>2.4</commons-io.version>
+		<commons-httpclient.version>3.1</commons-httpclient.version>
+		<commons-codec.version>1.6</commons-codec.version>
+		<commons-lang.version>2.6</commons-lang.version>
+		<commons-logging.version>1.1.1</commons-logging.version>
+		<spring.version>3.1.4.RELEASE</spring.version>
+		<spring-asm.version>3.1.4.RELEASE</spring-asm.version>
+		<spring-security.version>3.1.4.RELEASE</spring-security.version>
+		<joda-time.version>2.4</joda-time.version>
+
+		<!-- other -->
+		<axis.version>1.4</axis.version>
+		<axis-wsdl4j.version>1.5.1</axis-wsdl4j.version>
+		<http-request-kevinsawicki.version>5.6</http-request-kevinsawicki.version>
+		<jakarta-regexp.version>1.4</jakarta-regexp.version>
+		<jasperreports.version>4.0.2</jasperreports.version>
+
+		<!-- webapp -->
+		<displaytag.version>1.1.1</displaytag.version>
+		<jstl.version>1.2</jstl.version>
+		<servlet.version>3.0.1</servlet.version>
+		<!-- taglibs-standard to be depricated (used only in old admin, jstl should work fine) -->
+		<taglibs-standard.version>1.0.6</taglibs-standard.version>
+		<!-- yuicompressor version should STAY at 2.3.6:
+			the packtag doesn't compress properly with later version (tested with jquery, since alex had that in there).
+			If latest (2.4.7) can't do it, we can't trust it.
+			(though might have to do with included js-1.6R7.jar that's included later), so could test other things later,
+			but a good test is to see if jquery will work compressed.
+		 -->
+		<packtag-core.version>3.9-rosy_a</packtag-core.version>
+		<yuicompressor.version>2.3.6</yuicompressor.version>
+
+		<!-- testing -->
+		<junit.version>4.12</junit.version>
+		<mockito-all.version>1.10.8</mockito-all.version>
+		<!-- Note: jsptest-jsp21 seems to not be fully implemented and errors out. -->
+		<jsptest.artifactId>jsptest-jsp20</jsptest.artifactId>
+		<jsptest.version>0.19</jsptest.version>
+		<!-- For asserting JSON results in test -->
+		<json-path.version>0.9.1</json-path.version>
+
+		<!-- runtime -->
+		<mysql.version>5.0.3</mysql.version>
+
+		<!-- TODO: LOCK IN MAVEN PLUGIN VERSIONS -->
+		<!-- TODO: MOVE ${environment} into version name (instead of just build name) -->
+	</properties>
+
+	<build>
+		<finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+
+		<resources>
+			<!-- For now only filter *.xml files... we can change it later -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>**/*.xml</exclude>
+				</excludes>
+			</resource>
+		</resources>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<configuration>
+						<downloadSources>true</downloadSources>
+						<downloadJavadocs>true</downloadJavadocs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifest>
+								<addClasspath>true</addClasspath>
+								<mainClass>com.floydware.HelloWorld</mainClass>
+								<classpathPrefix>lib/</classpathPrefix>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/config/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>../</directory>
+									<includes>
+										<include>profile.properties</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>com.floydware.HelloWorld</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+	</profiles>
+
+	<dependencies>
+		<!-- BASE -->
+		<dependency>
+			<groupId>org.apache.ibatis</groupId>
+			<artifactId>ibatis-sqlmap</artifactId>
+			<version>${ibatis-sqlmap.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectjweaver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<!-- TODO: replaceme -->
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>${javax-inject.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${javax-mail.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>${javax-validation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.ostermiller</groupId>
+			<artifactId>utils</artifactId>
+			<version>${ostermiller.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi-ooxml.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>${velocity.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+
+		<!-- COMMONS -->
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>${commons-collections.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons-lang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>${commons-discovery.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>${commons-httpclient.version}</version>
+		</dependency>
+		<!-- The version 4 httpclient has different package source (spring 3.1 supports new version):
+			FIXME: eventually replace the original commons-httpclient completely with this (not changed since 2007)
+		 -->
+		<dependency>
+		   <groupId>org.apache.httpcomponents</groupId>
+		   <artifactId>httpclient</artifactId>
+		   <version>4.3.6</version>
+		</dependency>
+
+		<!-- SPRING -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- SPRING SECURITY -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+
+		<!-- jodea-time needed for spring @DateTimeFormat -->
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		    <version>${joda-time.version}</version>
+		</dependency>
+
+		<!-- WEBAPP STUFF -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+<!--
+		Packtag in repo has problems with tld pointing to https://github.com/d8bitr/packtag
+			instead of https://packtag.net.sf, so used manual installed packtag-3.8.jar
+			from external-jars for now.
+			(fixed the packtag.tld definition)
+		Packtag ROSY verison needed for doing _LAB.js deferred loading:
+			FIXME: add notes to differences and/or submit to packtag owner for upload of changes.
+ -->
+
+		<dependency>
+			<groupId>net.sf.packtag</groupId>
+			<artifactId>packtag-core</artifactId>
+			<version>${packtag-core.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.yahoo.platform.yui</groupId>
+			<artifactId>yuicompressor</artifactId>
+			<version>${yuicompressor.version}</version>
+		</dependency>
+
+		<!-- RUNTIME -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- TESTING -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito-all.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito-all.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- to help with some of the api testeing -->
+		<dependency>
+		   <groupId>org.apache.httpcomponents</groupId>
+		   <artifactId>httpasyncclient</artifactId>
+		   <version>4.0.2</version>
+		   <scope>test</scope>
+		</dependency>
+
+		<!-- OTHER -->
+		<dependency>
+			<groupId>jakarta-regexp</groupId>
+			<artifactId>jakarta-regexp</artifactId>
+			<version>${jakarta-regexp.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf</groupId>
+			<artifactId>jargs</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!-- Needed to get working with NotificationService, etc.. -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+
+		<!-- For JavaConfig -->
+		<!-- which is newer spring configuration in java instead of xml -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>3.1</version>
+		</dependency>
+
+	</dependencies>
+
+	<repositories>
+
+		<repository>
+			<id>spring-maven-release</id>
+			<name>Spring Maven Release Repository</name>
+			<url>http://maven.springframework.org/release</url>
+		</repository>
+
+		<repository>
+			<id>central1</id>
+			<name>Central Repository 1</name>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+
+	</repositories>
+
+</project>
