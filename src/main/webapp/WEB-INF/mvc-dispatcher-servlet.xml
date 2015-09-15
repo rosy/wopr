@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--
+
+  Wondering why there's no actual configuration here?  Because jBoss 6 eap wants to load the application context (which is defined in applicationContext.xml) as well as this file.  So if you define stuff here and not there, it'll fail, and vice-versa.  Therefore, we just leave it all in applicationContext.xml and this file lives happily empty.
+
+  12/2/2013
+  
+-->
+
+</beans>

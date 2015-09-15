@@ -36,7 +36,7 @@
 		<poi.version>3.10-FINAL</poi.version>
 		<poi-ooxml.version>3.10-FINAL</poi-ooxml.version>
 		<quartz.version>1.7.3</quartz.version>
-		<velocity.version>1.5</velocity.version>
+		<velocity.version>1.7</velocity.version>
 
 		<!-- commons + spring -->
 		<commons-beanutils.version>1.7.0</commons-beanutils.version>
@@ -62,19 +62,10 @@
 		<jasperreports.version>4.0.2</jasperreports.version>
 
 		<!-- webapp -->
-		<displaytag.version>1.1.1</displaytag.version>
 		<jstl.version>1.2</jstl.version>
 		<servlet.version>3.0.1</servlet.version>
 		<!-- taglibs-standard to be depricated (used only in old admin, jstl should work fine) -->
 		<taglibs-standard.version>1.0.6</taglibs-standard.version>
-		<!-- yuicompressor version should STAY at 2.3.6:
-			the packtag doesn't compress properly with later version (tested with jquery, since alex had that in there).
-			If latest (2.4.7) can't do it, we can't trust it.
-			(though might have to do with included js-1.6R7.jar that's included later), so could test other things later,
-			but a good test is to see if jquery will work compressed.
-		 -->
-		<packtag-core.version>3.9-rosy_a</packtag-core.version>
-		<yuicompressor.version>2.3.6</yuicompressor.version>
 
 		<!-- testing -->
 		<junit.version>4.12</junit.version>
@@ -93,7 +84,7 @@
 	</properties>
 
 	<build>
-		<finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+		<finalName>${project.artifactId}-${maven.build.timestamp}</finalName>
 
 		<resources>
 			<!-- For now only filter *.xml files... we can change it later -->
@@ -419,26 +410,6 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet.version}</version>
 			<scope>provided</scope>
-		</dependency>
-<!--
-		Packtag in repo has problems with tld pointing to https://github.com/d8bitr/packtag
-			instead of https://packtag.net.sf, so used manual installed packtag-3.8.jar
-			from external-jars for now.
-			(fixed the packtag.tld definition)
-		Packtag ROSY verison needed for doing _LAB.js deferred loading:
-			FIXME: add notes to differences and/or submit to packtag owner for upload of changes.
- -->
-
-		<dependency>
-			<groupId>net.sf.packtag</groupId>
-			<artifactId>packtag-core</artifactId>
-			<version>${packtag-core.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.yahoo.platform.yui</groupId>
-			<artifactId>yuicompressor</artifactId>
-			<version>${yuicompressor.version}</version>
 		</dependency>
 
 		<!-- RUNTIME -->

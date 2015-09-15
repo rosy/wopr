@@ -38,6 +38,6 @@ public class HelloWorld {
 	}
 
 	private static void helloWorld() {
-		System.out.println("Hello World");
+		System.out.println("Did you ever play tic-tac-toe?");
 	}
 }
