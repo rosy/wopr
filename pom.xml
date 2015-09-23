@@ -16,6 +16,8 @@
 
 		<java.version>1.6</java.version>
 
+		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+
 		<!-- DEPENDENCY VERSIONS -->
 		<!-- Change these and it should propagate through to all projects:
 			Note: can add to specific project's <properties> section to override
@@ -463,10 +465,18 @@
 			<version>${jakarta-regexp.version}</version>
 		</dependency>
 
+		<!--
 		<dependency>
 			<groupId>net.sf</groupId>
 			<artifactId>jargs</artifactId>
 			<version>1.0</version>
+		</dependency>
+		 -->
+		<!-- jargs seems to have disappeared, but yuicompressor has CmdLineParser -->
+		<dependency>
+			<groupId>com.yahoo.platform.yui</groupId>
+			<artifactId>yuicompressor</artifactId>
+			<version>2.3.6</version>
 		</dependency>
 
 		<!-- Needed to get working with NotificationService, etc.. -->
