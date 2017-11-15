@@ -14,7 +14,7 @@
 		<environment>development</environment>
 		<skipTests>false</skipTests>
 
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 
 		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
 
@@ -184,6 +184,43 @@
 						<goals>
 							<goal>single</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+                       <plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>remove old latest.war link</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>rm</executable>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+							<arguments>
+								<argument>-f</argument>
+								<argument>latest.war</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>link of latest.war</id>
+						<phase>install</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>ln</executable>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+							<arguments>
+								<argument>-s</argument>
+								<argument>${project.build.finalName}</argument>
+								<argument>latest.war</argument>
+							</arguments>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
