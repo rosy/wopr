@@ -18,7 +18,7 @@ public class TestExample {
 
         @Before
         public void setup(){
-          MockitoAnnotations.init(this);
+          MockitoAnnotations.initMocks(this);
         }
 
 	@Test
