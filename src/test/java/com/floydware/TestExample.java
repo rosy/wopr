@@ -3,8 +3,10 @@ package com.floydware;
 import javax.annotation.Resource;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -13,6 +15,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class TestExample {
 	//@Resource
 	private String testString;
+
+        @Before
+        public void setup(){
+          MockitoAnnotations.init(this);
+        }
 
 	@Test
 	public void test() {
