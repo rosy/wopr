@@ -53,13 +53,17 @@
 
   * goto project directory (wopr)
 
-    mvn clean install
-    cd target
-    java -jar WOPR-???.jar
+      mvn clean install
+      cd target
+      java -jar WOPR-???.jar
 
 ## run in a webapp:
 
+  * build/run as above to get a WOPR-????.war
+  * copy file to your jboss???/standalone/deployments directory as WOPR.war
   * simply run bin/standalone.sh from jboss installation directory
     * (if on windows machine will work from git-bash)
+    * (if already running either kill it [Ctrl^C] or touch *.war.deployed to re-deploy)
   * in a browser goto: http://localhost:8080/WOPR/hello.htm
+    * (if you didn't rename it WOPR.war, your url will be http://localhost:8080/WOPR-????/hello.htm)
 
